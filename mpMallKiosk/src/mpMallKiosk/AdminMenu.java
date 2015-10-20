@@ -12,6 +12,8 @@ import javax.swing.JButton;
 
 public class AdminMenu extends JFrame {
 
+	// GUI designed by Richard Parayno and Kurt Ebol
+	
 	private JPanel mapPanel;
 	private JPanel controlPanel;
 	private JButton controlButt1;
