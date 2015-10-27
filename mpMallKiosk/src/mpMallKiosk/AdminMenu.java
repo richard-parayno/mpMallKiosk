@@ -1,8 +1,7 @@
 package mpMallKiosk;
 
 
-import java.awt.Color;
-import java.awt.GridLayout;
+import java.awt.*;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -16,6 +15,7 @@ public class AdminMenu extends JFrame {
 	
 	private JPanel mapPanel;
 	private JPanel controlPanel;
+	private JPanel mainPanel;
 	private JButton controlButt1;
 	private JButton controlButt2;
 	private JButton controlButt3;
@@ -23,16 +23,20 @@ public class AdminMenu extends JFrame {
 	
 	public AdminMenu() {
 		super("Mall Kiosk - Admin Menu");
-		
+
+		mainPanel = new JPanel(new GridLayout(1,2));
+
+
 		//Creates the panel for the Map
 		mapPanel = new JPanel(new GridLayout(50,50,-1,-1));
 		mapPanel.setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
-		mapPanel.setAlignmentY(LEFT_ALIGNMENT);
+
+
 		
 		
 		//Creates the panel for the controls
 		controlPanel = new JPanel(new GridLayout(10,10));
-		controlPanel.setAlignmentY(RIGHT_ALIGNMENT);
+
 		
 		controlButt1 = new JButton("Exit");
 		controlButt2 = new JButton("Edit");
@@ -41,19 +45,19 @@ public class AdminMenu extends JFrame {
 		controlPanel.add(controlButt1);
 		controlPanel.add(controlButt2);
 		controlPanel.add(controlButt3);
-		
-		add(controlPanel);
-		
+
+		controlPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+
 		//Creates the boxes
 		for (int i =0; i<(50*50); i++){
 			final JLabel box = new JLabel();
 		    box.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		    mapPanel.add(box);
 		}
-		
-		
-		
-		add(mapPanel);
+
+		mainPanel.add(mapPanel);
+		mainPanel.add(controlPanel);
+		add(mainPanel);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(1000,1000);
