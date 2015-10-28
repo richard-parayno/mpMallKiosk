@@ -8,8 +8,12 @@ import java.awt.event.ActionListener;
 import static java.awt.BorderLayout.CENTER;
 
 /**
- * Created by richard on 28/10/2015.
+ * Created by Richard Parayno on 28/10/2015.
  */
+
+
+// NOTE: Box creation logic is sketchy. Recommended to change the logic to something more reusable
+
 public class MainWindow extends JFrame {
 
     //greetingPanel Components
@@ -162,8 +166,78 @@ public class MainWindow extends JFrame {
         add(controlPanel);
         setVisible(true);
 
-        //ActionListeners
+        //JTextField Listeners
+        {
+            // Set Mall Size
+            cpMallSize.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    remove(mapPanel);
+                    if (Integer.parseInt(xCol.getText()) >= 3 && Integer.parseInt(yRow.getText()) >= 3)
+                        //Creates the boxes
+                        for (int i = 0; i < (Integer.parseInt(xCol.getText()) * Integer.parseInt(yRow.getText())); i++) {
+                            //Creates the panel for the Map
+                            mapPanel = new JPanel(new GridLayout(Integer.parseInt(xCol.getText()), Integer.parseInt(yRow.getText()), -1, -1));
+                            mapPanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+                            final JLabel box = new JLabel();
+                            box.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                            mapPanel.add(box);
+                        }
+                    add(mapPanel);
+                }
+            });
+            // Cell Pass/Unpass -- Note Done
+            cpCellPass.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
 
+                }
+            });
+            // Store Add -- Not Done
+            cpStoreAdd.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+
+                }
+            });
+            // Store Remove -- Not Done
+            cpStoreRemove.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+                }
+            });
+            // Clear Button -- Not Done
+            cpClear.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+                }
+            });
+            // Undo Button -- Not Done
+            cpUndo.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+                }
+            });
+            // Save Button -- Not Done
+            cpSave.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+                }
+            });
+
+            // Confirm Button -- Not Done
+            cpConfirm.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+                }
+            });
+        }
     }
 
 
