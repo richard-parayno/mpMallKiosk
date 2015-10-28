@@ -21,6 +21,10 @@ public class AdminMenu extends JFrame {
 
 		setLayout(null);
 
+
+	}
+
+	public void showAdminMenu() {
 		//Creates the panel for the Map
 		mapPanel = new JPanel(new GridLayout(50,50,-1,-1));
 		mapPanel.setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
@@ -44,8 +48,8 @@ public class AdminMenu extends JFrame {
 		//Creates the boxes
 		for (int i =0; i<(50*50); i++){
 			final JLabel box = new JLabel();
-		    box.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		    mapPanel.add(box);
+			box.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+			mapPanel.add(box);
 		}
 		//Adds the panels to the frames
 		add(mapPanel);
