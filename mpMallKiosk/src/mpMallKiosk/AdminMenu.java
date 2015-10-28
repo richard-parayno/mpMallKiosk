@@ -7,7 +7,7 @@ import javax.swing.*;
 
 public class AdminMenu extends JFrame {
 
-	// GUI designed by Richard Parayno and Kurt Ebol
+	// GUI designed by Richard Parayno
 	
 	private JPanel mapPanel;
 	private JPanel controlPanel;
