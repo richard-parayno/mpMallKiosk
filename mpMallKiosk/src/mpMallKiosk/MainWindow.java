@@ -98,9 +98,10 @@ public class MainWindow extends JFrame {
 
     public void showAdminMenu() {
         //Creates the panel for the Map
-        mapPanel = new JPanel(new GridLayout(50,50,-1,-1));
-        mapPanel.setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
-        mapPanel.setSize(800, 700);
+        //mapPanel = new JPanel(new GridLayout(50,50,-1,-1));
+        //mapPanel.setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
+        //mapPanel.setSize(800, 700);
+        mapPanel = new JPanel();
 
 
         //Creates the panel for the row/col control
@@ -153,15 +154,15 @@ public class MainWindow extends JFrame {
         controlPanel.setLocation(800, 200);
         //Sets the layout of the control panel
         controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
-        //Creates the boxes
+        /*Creates the boxes
         for (int i =0; i<(50*50); i++){
             final JLabel box = new JLabel();
             box.setBorder(BorderFactory.createLineBorder(Color.BLACK));
             mapPanel.add(box);
-        }
+        } */
 
         //Adds the panels to the frames
-        add(mapPanel);
+        //add(mapPanel);
         add(rowColPanel);
         add(controlPanel);
         setVisible(true);
@@ -174,16 +175,21 @@ public class MainWindow extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                     remove(mapPanel);
                     if (Integer.parseInt(xCol.getText()) >= 3 && Integer.parseInt(yRow.getText()) >= 3)
+                        //Creates the panel for the Map
+                        mapPanel = new JPanel(new GridLayout(Integer.parseInt(xCol.getText()), Integer.parseInt(yRow.getText()), -1, -1));
+                        mapPanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+                        mapPanel.setSize(800, 670);
+                        System.out.println("Grid with " + Integer.parseInt(xCol.getText()) + " columns and " + Integer.parseInt(yRow.getText()) + " rows created.");
                         //Creates the boxes
                         for (int i = 0; i < (Integer.parseInt(xCol.getText()) * Integer.parseInt(yRow.getText())); i++) {
-                            //Creates the panel for the Map
-                            mapPanel = new JPanel(new GridLayout(Integer.parseInt(xCol.getText()), Integer.parseInt(yRow.getText()), -1, -1));
-                            mapPanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
                             final JLabel box = new JLabel();
                             box.setBorder(BorderFactory.createLineBorder(Color.BLACK));
                             mapPanel.add(box);
                         }
+                    mapPanel.setVisible(true);
                     add(mapPanel);
+                    validate();
+                    repaint();
                 }
             });
             // Cell Pass/Unpass -- Note Done
