@@ -96,7 +96,7 @@ public class MainWindow extends JFrame {
         greetingPanel.add(enterAdmin);
         greetingPanel.add(enterShopper);
         greetingPanel.setSize(300, 300);
-        greetingPanel.setLocation(348, 500);
+        greetingPanel.setLocation(348, 348);
         greetingPanel.setVisible(true);
 
 
@@ -271,7 +271,7 @@ public class MainWindow extends JFrame {
         accessPanel.add(password);
         accessPanel.add(enter);
         accessPanel.setSize(300, 300);
-        accessPanel.setLocation(348, 500);
+        accessPanel.setLocation(348, 348);
         accessPanel.setVisible(true);
         add(accessPanel);
 
