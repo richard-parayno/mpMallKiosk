@@ -13,6 +13,8 @@ import static java.awt.BorderLayout.CENTER;
 
 public class MainWindow extends JFrame {
 
+    private JLabel backgroundImage;
+
     //greetingPanel Components
     private JPanel greetingPanel;
     private JButton enterAdmin;
@@ -31,6 +33,8 @@ public class MainWindow extends JFrame {
     private JButton cpUndo;
     private JButton cpSave;
     private JButton cpConfirm;
+    private JButton cpExit;
+    private JButton cpLoad;
     private JTextField yRow;
     private JTextField xCol;
     private JLabel lRow;
@@ -50,6 +54,16 @@ public class MainWindow extends JFrame {
         setSize(1000,1000);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        showGreetingMenu();
+
+        //Make frame visible and non-resizable
+        setVisible(true);
+        setResizable(false);
+
+
+    }
+
+    public void showGreetingMenu() {
         //Initialize Buttons
         enterAdmin = new JButton("Admin Menu");
         enterShopper = new JButton("Shopper Menu");
@@ -75,6 +89,7 @@ public class MainWindow extends JFrame {
         //Initialize Labels
         welcomeLabel = new JLabel("Welcome to the Mall Kiosk!");
 
+
         // Greeting Panel Initialization and adding components
         greetingPanel = new JPanel(new FlowLayout());
         greetingPanel.add(welcomeLabel);
@@ -87,12 +102,6 @@ public class MainWindow extends JFrame {
 
         //Add greetingPanel to frame
         add(greetingPanel);
-
-        //Make frame visible and non-resizable
-        setVisible(true);
-        setResizable(false);
-
-
     }
 
     public void showAdminMenu() {
@@ -104,6 +113,7 @@ public class MainWindow extends JFrame {
         //Instantiates the labels
         lRow = new JLabel("Row: ");
         lCol = new JLabel("Col: ");
+
         //Instantiates the text fields
         yRow = new JTextField();
         xCol = new JTextField();
@@ -127,8 +137,10 @@ public class MainWindow extends JFrame {
         cpStoreRemove = new JButton("Remove Store");
         cpClear = new JButton("Clear All");
         cpUndo = new JButton("Undo");
+        cpLoad = new JButton("Load Mall");
         cpSave = new JButton("Save Mall");
         cpConfirm = new JButton("OKS");
+        cpExit = new JButton("Exit");
 
         //Adds the buttons
         controlPanel.add(cpMallSize);
@@ -137,8 +149,10 @@ public class MainWindow extends JFrame {
         controlPanel.add(cpStoreRemove);
         controlPanel.add(cpClear);
         controlPanel.add(cpUndo);
+        controlPanel.add(cpLoad);
         controlPanel.add(cpSave);
         controlPanel.add(cpConfirm);
+        controlPanel.add(cpExit);
 
         //Sets the control panel's size and location on the frame
         controlPanel.setSize(300,1000);
@@ -210,6 +224,13 @@ public class MainWindow extends JFrame {
 
                 }
             });
+            // Load Button -- Not Done
+            cpLoad.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+                }
+            });
             // Save Button -- Not Done
             cpSave.addActionListener(new ActionListener() {
                 @Override
@@ -223,6 +244,20 @@ public class MainWindow extends JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
 
+                }
+            });
+
+            // Exit Button
+            cpExit.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    remove(mapPanel);
+                    remove(rowColPanel);
+                    remove(controlPanel);
+                    showGreetingMenu();
+                    validate();
+                    repaint();
+                    //System.exit(0);
                 }
             });
         }
