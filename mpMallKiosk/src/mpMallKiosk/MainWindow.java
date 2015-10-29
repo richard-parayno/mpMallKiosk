@@ -11,9 +11,6 @@ import static java.awt.BorderLayout.CENTER;
  * Created by Richard Parayno on 28/10/2015.
  */
 
-
-// NOTE: Box creation logic is sketchy. Recommended to change the logic to something more reusable
-
 public class MainWindow extends JFrame {
 
     //greetingPanel Components
@@ -39,9 +36,10 @@ public class MainWindow extends JFrame {
     private JLabel lRow;
     private JLabel lCol;
 
-
-
-
+    //AccessMenu Components
+    private JPanel accessPanel;
+    private JTextField password;
+    private JButton enter;
 
 
     public MainWindow () {
@@ -62,7 +60,7 @@ public class MainWindow extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 // Hides the greetingPanel and calls the showAdminMenu() method
                 greetingPanel.setVisible(false);
-                showAdminMenu();
+                requestAccessMenu();
             }
         });
 
@@ -86,6 +84,7 @@ public class MainWindow extends JFrame {
         greetingPanel.setLocation(348, 500);
         greetingPanel.setVisible(true);
 
+
         //Add greetingPanel to frame
         add(greetingPanel);
 
@@ -97,12 +96,8 @@ public class MainWindow extends JFrame {
     }
 
     public void showAdminMenu() {
-        //Creates the panel for the Map
-        //mapPanel = new JPanel(new GridLayout(50,50,-1,-1));
-        //mapPanel.setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
-        //mapPanel.setSize(800, 700);
+        //Creates a "dummy" mapPanel
         mapPanel = new JPanel();
-
 
         //Creates the panel for the row/col control
         rowColPanel = new JPanel(new GridLayout(4,1));
@@ -123,8 +118,6 @@ public class MainWindow extends JFrame {
         rowColPanel.add(xCol);
         rowColPanel.setLocation(800,25);
 
-
-
         //Creates the panel for the controls
         controlPanel = new JPanel(new FlowLayout());
         //Instantiates the buttons
@@ -136,8 +129,6 @@ public class MainWindow extends JFrame {
         cpUndo = new JButton("Undo");
         cpSave = new JButton("Save Mall");
         cpConfirm = new JButton("OKS");
-
-
 
         //Adds the buttons
         controlPanel.add(cpMallSize);
@@ -154,25 +145,19 @@ public class MainWindow extends JFrame {
         controlPanel.setLocation(800, 200);
         //Sets the layout of the control panel
         controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
-        /*Creates the boxes
-        for (int i =0; i<(50*50); i++){
-            final JLabel box = new JLabel();
-            box.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            mapPanel.add(box);
-        } */
 
         //Adds the panels to the frames
-        //add(mapPanel);
         add(rowColPanel);
         add(controlPanel);
         setVisible(true);
 
-        //JTextField Listeners
+        //JButton Listeners
         {
-            // Set Mall Size
+            // Set Mall Size -- DONE!!!!!!
             cpMallSize.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    // We remove the "dummy" panel we created,
                     remove(mapPanel);
                     if (Integer.parseInt(xCol.getText()) >= 3 && Integer.parseInt(yRow.getText()) >= 3)
                         //Creates the panel for the Map
@@ -186,10 +171,7 @@ public class MainWindow extends JFrame {
                             box.setBorder(BorderFactory.createLineBorder(Color.BLACK));
                             mapPanel.add(box);
                         }
-                    mapPanel.setVisible(true);
-                    add(mapPanel);
-                    validate();
-                    repaint();
+                    refreshUI(mapPanel);
                 }
             });
             // Cell Pass/Unpass -- Note Done
@@ -245,6 +227,38 @@ public class MainWindow extends JFrame {
             });
         }
     }
+
+    public void requestAccessMenu() {
+        //accessPanel Initialization and adding components
+        accessPanel = new JPanel(new FlowLayout());
+        password = new JTextField("DLSU2015");
+        enter = new JButton("Enter");
+        accessPanel.add(password);
+        accessPanel.add(enter);
+        accessPanel.setSize(300, 300);
+        accessPanel.setLocation(348, 500);
+        accessPanel.setVisible(true);
+        add(accessPanel);
+
+        enter.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(password.getText().equals("DLSU2015")) {
+                    accessPanel.setVisible(false);
+                    showAdminMenu();
+                }
+            }
+        });
+    }
+
+    // This method adds the panel and refreshes the UI.
+    public void refreshUI(JPanel panel) {
+        add(panel);
+        validate();
+        repaint();
+    }
+
+
 
 
 }
