@@ -25,6 +25,10 @@ public class MainWindow extends JFrame {
     private JPanel mapPanel;
     private JPanel controlPanel;
     private JPanel rowColPanel;
+    private JPanel controlInit;
+    private JButton ciExit;
+    private JButton ciEdit;
+    private JButton ciDeploy;
     private JButton cpMallSize;
     private JButton cpCellPass;
     private JButton cpStoreAdd;
@@ -33,7 +37,6 @@ public class MainWindow extends JFrame {
     private JButton cpUndo;
     private JButton cpSave;
     private JButton cpConfirm;
-    private JButton cpExit;
     private JButton cpLoad;
     private JTextField yRow;
     private JTextField xCol;
@@ -46,6 +49,9 @@ public class MainWindow extends JFrame {
     private JButton enter;
 
 
+    private boolean isDeployed;
+
+
     public MainWindow () {
         super("Mall Kiosk");
 
@@ -54,6 +60,8 @@ public class MainWindow extends JFrame {
         setSize(1000,1000);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        backgroundImage = new JLabel(new ImageIcon("background.png"));
+        this.add(backgroundImage);
         showGreetingMenu();
 
         //Make frame visible and non-resizable
@@ -113,7 +121,6 @@ public class MainWindow extends JFrame {
         //Instantiates the labels
         lRow = new JLabel("Row: ");
         lCol = new JLabel("Col: ");
-
         //Instantiates the text fields
         yRow = new JTextField();
         xCol = new JTextField();
@@ -140,8 +147,6 @@ public class MainWindow extends JFrame {
         cpLoad = new JButton("Load Mall");
         cpSave = new JButton("Save Mall");
         cpConfirm = new JButton("OKS");
-        cpExit = new JButton("Exit");
-
         //Adds the buttons
         controlPanel.add(cpMallSize);
         controlPanel.add(cpCellPass);
@@ -152,17 +157,31 @@ public class MainWindow extends JFrame {
         controlPanel.add(cpLoad);
         controlPanel.add(cpSave);
         controlPanel.add(cpConfirm);
-        controlPanel.add(cpExit);
-
         //Sets the control panel's size and location on the frame
         controlPanel.setSize(300,1000);
         controlPanel.setLocation(800, 200);
         //Sets the layout of the control panel
         controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
 
+
+        //Creates the panel for the controlInit
+        controlInit = new JPanel(new FlowLayout());
+        //Instantiates the buttons
+        ciEdit = new JButton("Edit");
+        ciDeploy = new JButton("Deploy");
+        ciExit = new JButton("Exit");
+        //Adds the buttons
+        controlInit.add(ciEdit);
+        controlInit.add(ciDeploy);
+        controlInit.add(ciExit);
+        //Sets the panel's size and location
+        controlInit.setSize(300, 300);
+        controlInit.setLocation(800, 500);
+        //Sets the layout manager of the control panel
+        controlInit.setLayout(new BoxLayout(controlInit, BoxLayout.Y_AXIS));
+
         //Adds the panels to the frames
-        add(rowColPanel);
-        add(controlPanel);
+        add(controlInit);
         setVisible(true);
 
         //JButton Listeners
@@ -186,13 +205,14 @@ public class MainWindow extends JFrame {
                             mapPanel.add(box);
                         }
                     refreshUI(mapPanel);
+                    isDeployed = false;
                 }
             });
-            // Cell Pass/Unpass -- Note Done
+            // Cell Pass/Unpass -- Not Done
             cpCellPass.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-
+                    isDeployed = false;
                 }
             });
             // Store Add -- Not Done
@@ -200,14 +220,14 @@ public class MainWindow extends JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
 
-
+                    isDeployed = false;
                 }
             });
             // Store Remove -- Not Done
             cpStoreRemove.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-
+                    isDeployed = false;
                 }
             });
             // Clear Button -- Not Done
@@ -221,21 +241,21 @@ public class MainWindow extends JFrame {
             cpUndo.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-
+                    isDeployed = false;
                 }
             });
             // Load Button -- Not Done
             cpLoad.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-
+                    isDeployed = false;
                 }
             });
             // Save Button -- Not Done
             cpSave.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-
+                    isDeployed = false;
                 }
             });
 
@@ -243,21 +263,40 @@ public class MainWindow extends JFrame {
             cpConfirm.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    isDeployed = false;
+                }
+            });
 
+            // Edit Button -- Not Done
+            ciEdit.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    refreshUI(rowColPanel);
+                    refreshUI(controlPanel);
+                    isDeployed = false;
+                }
+            });
+
+            // Deploy Button -- Not Done
+            ciDeploy.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    isDeployed = true;
                 }
             });
 
             // Exit Button
-            cpExit.addActionListener(new ActionListener() {
+            ciExit.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     remove(mapPanel);
                     remove(rowColPanel);
                     remove(controlPanel);
+                    remove(controlInit);
                     showGreetingMenu();
                     validate();
                     repaint();
-                    //System.exit(0);
+                    isDeployed = false;
                 }
             });
         }
