@@ -12,15 +12,7 @@ import java.awt.event.MouseMotionListener;
 import java.util.LinkedList;
 import java.util.Stack;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 /**
  * Created by Richard Parayno on 28/10/2015.
@@ -72,6 +64,21 @@ public class MainWindow extends JFrame implements MouseListener, MouseMotionList
     private JPanel accessPanel;
     private JTextField password;
     private JButton enter;
+
+    //StoreOp-Add Components
+    private JPanel storeOpAdd;
+    private JTextField fname;
+
+    private JLabel lname;
+    private JComboBox storeList;
+    private JLabel ltype;
+    private JButton b1;
+    private JButton soExit;
+    private String[] storeTypeTEMPORARY;
+
+    //StoreOp-Remove Components
+    private JPanel storeOpRemove;
+
     
     //Logic Components
     private Layout layout;
@@ -284,7 +291,7 @@ public class MainWindow extends JFrame implements MouseListener, MouseMotionList
                 	addStore(tempo = new Cell[9][9]);
                 	moves.push(processCells);
                 	updateLayout(processCells);
-                	refreshUI(mapPanel);
+                	//refreshUI(mapPanel);
                 	System.out.println("Added x store");
                 }
             });
@@ -295,7 +302,7 @@ public class MainWindow extends JFrame implements MouseListener, MouseMotionList
                 	
                 	//dropdown list, ako na bahala sa elements
                 	//remove button, back to controlPanel button
-                	//removeStoreMenu();
+                	removeStore();
                 
                 	//remove array of cells of a store
                 	moves.push(processCells);
@@ -383,7 +390,6 @@ public class MainWindow extends JFrame implements MouseListener, MouseMotionList
                     remove(rowColPanel);
                     remove(controlPanel);
                     remove(controlInit);
-                    remove(passablePanel);
                     remove(mapPanel);
                     showGreetingMenu();
                     validate();
@@ -409,34 +415,129 @@ public class MainWindow extends JFrame implements MouseListener, MouseMotionList
 	}
 	
 	public void addStore (Cell[][] store) { //pota richard pakiayos di ko maayos eh
-		JPanel storeOp = new JPanel(new FlowLayout());
-		JTextField fname = new JTextField("                ");
-		JLabel lname = new JLabel("Name of store: ");
-		//dropdown list of type of store
-		JLabel ltype = new JLabel("Type of store: ");
-		JButton b1 = new JButton ("Enter");
-		b1.addActionListener(new ActionListener() {
+        remove(controlPanel);
+        remove(controlInit);
+        remove(rowColPanel);
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				//field checkers and error messages
-				//if all correct, initialize store object and add store to array of stores
-				//show confirmation message
-				//return to main panel 
-				refreshUI(mapPanel);
-			}
-		});
-		storeOp.add(lname);
-		storeOp.add(fname);
-		storeOp.add(ltype);
-		storeOp.add(b1);
-		storeOp.setSize(300,1000);
-        storeOp.setLocation(780, 200);
-        storeOp.setLayout(new BoxLayout(storeOp, BoxLayout.Y_AXIS));
-		controlPanel.setVisible(false);
-		add(storeOp);
-		storeOp.setVisible(true);
-		refreshUI(storeOp);
+        storeOpAdd = new JPanel(new GridLayout(6,1));
+
+        fname = new JTextField();
+        fname.setMinimumSize(fname.getPreferredSize());
+
+        lname = new JLabel("Store Name: ");
+        ltype = new JLabel("Store Type: ");
+
+        b1 = new JButton("Enter");
+        soExit = new JButton("Close");
+
+        storeTypeTEMPORARY = new String[]{"Kagaguhan", "Katarantaduhan", "Ayoko na", "Mag program"};
+        storeList = new JComboBox(storeTypeTEMPORARY);
+        storeList.setSelectedIndex(0);
+
+
+		storeOpAdd.add(lname);
+		storeOpAdd.add(fname);
+		storeOpAdd.add(ltype);
+        storeOpAdd.add(storeList);
+		storeOpAdd.add(b1);
+		storeOpAdd.add(soExit);
+		storeOpAdd.setSize(150,150);
+        storeOpAdd.setLocation(800, 275);
+		refreshUI(storeOpAdd);
+
+        //Listeners
+        {
+            storeList.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+                }
+            });
+
+
+            b1.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent arg0) {
+                    //field checkers and error messages
+                    //if all correct, initialize store object and add store to array of stores
+                    //show confirmation message
+                    //return to main panel
+                    refreshUI(mapPanel);
+                }
+            });
+
+            soExit.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    remove(storeOpAdd);
+
+                    refreshUI(rowColPanel);
+                    refreshUI(controlInit);
+                    refreshUI(controlPanel);
+                }
+            });
+        }
+	}
+
+    public void removeStore () {
+        remove(controlPanel);
+        remove(controlInit);
+        remove(rowColPanel);
+
+        storeOpRemove = new JPanel(new GridLayout(6,1));
+        lname = new JLabel("Store Name: ");
+
+
+        b1 = new JButton("Enter");
+        soExit = new JButton("Close");
+
+        storeTypeTEMPORARY = new String[]{"Kagaguhan", "Katarantaduhan", "Ayoko na", "Mag program"};
+        storeList = new JComboBox(storeTypeTEMPORARY);
+        storeList.setSelectedIndex(0);
+
+
+		storeOpRemove.add(lname);
+        storeOpRemove.add(storeList);
+		storeOpRemove.add(b1);
+		storeOpRemove.add(soExit);
+		storeOpRemove.setSize(150,150);
+        storeOpRemove.setLocation(800, 275);
+		refreshUI(storeOpRemove);
+
+        //Listeners
+        {
+            storeList.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+                }
+            });
+
+
+            b1.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent arg0) {
+                    //field checkers and error messages
+                    //if all correct, initialize store object and add store to array of stores
+                    //show confirmation message
+                    //return to main panel
+                    refreshUI(mapPanel);
+                }
+            });
+
+            soExit.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    remove(storeOpRemove);
+
+                    refreshUI(rowColPanel);
+                    refreshUI(controlInit);
+                    refreshUI(controlPanel);
+                }
+            });
+        }
 	}
 	
 	public void drawBlock (Graphics g, JPanel panel, int row, int col) {
@@ -453,7 +554,6 @@ public class MainWindow extends JFrame implements MouseListener, MouseMotionList
 	//skeleton below. ako na bahala sa logic basta need buttons with listener skeletons ty mwa 
 	
 	public void passableMenu () {
-
         remove(controlPanel);
         remove(rowColPanel);
         remove(controlInit);
@@ -466,13 +566,11 @@ public class MainWindow extends JFrame implements MouseListener, MouseMotionList
         ppClose = new JButton("Close Passable Menu");
         passablePanel.setLayout(new BoxLayout(passablePanel, BoxLayout.Y_AXIS));
 
-
         passablePanel.add(ppPassable);
         passablePanel.add(ppNotPassable);
         passablePanel.add(ppClose);
 
         refreshUI(passablePanel);
-
 
         //JButton Listeners
         {
@@ -507,9 +605,7 @@ public class MainWindow extends JFrame implements MouseListener, MouseMotionList
 
 	}
 	
-	public void removeStoreMenu () {
-		
-	}
+
 	
 	//events
 	@Override
