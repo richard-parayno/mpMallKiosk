@@ -19,17 +19,16 @@ public class Path {
 	
 	public void getShortestPath (Cell destination) {
 		ArrayList<Cell> possiblePaths = new ArrayList<Cell>();
-		
+		/* CANNOT FIND SYMBOL
 		int lastXCell = destination.getX(),
 				lastYCell = destination.getY(),
 				ctrX = lastXCell,
 				ctrY = lastYCell;
-		
+
 		possiblePaths.add(new Cell(startX, startY));
 		
 		while(ctrX != lastXCell && ctrY != lastYCell){
-			
+		*/
 		}
 	}
-	
-}
+

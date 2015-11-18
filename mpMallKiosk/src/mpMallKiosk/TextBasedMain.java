@@ -13,7 +13,8 @@ public class TextBasedMain {
 		
 		System.out.println("Admin or user?");
 			hold = trp.nextLine();
-			
+
+		/* ILLEGAL START OF EXPRESSION! Please fix thx
 		if(hold.equalsIgnoreCase("admin")){
 			while(!pass.equals("DLSU2015") && ctr <= 3){
 				System.out.println("Password: ");
@@ -22,8 +23,8 @@ public class TextBasedMain {
 			}
 			if (ctr == 4) isAdmin = false;
 		}
-		
-		else if ()
+		*/
+
 		
 		
 	}

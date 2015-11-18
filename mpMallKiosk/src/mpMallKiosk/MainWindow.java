@@ -56,6 +56,13 @@ public class MainWindow extends JFrame implements MouseListener, MouseMotionList
     private JTextField xCol;
     private JLabel lRow;
     private JLabel lCol;
+
+    //PassableMenu Components
+    private JPanel passablePanel;
+    private JLabel lPassable;
+    private JButton ppPassable;
+    private JButton ppNotPassable;
+    private JButton ppClose;
     
     //mouseListener components
     private int mouseX;
@@ -259,13 +266,13 @@ public class MainWindow extends JFrame implements MouseListener, MouseMotionList
                 	
                 	//three buttons, passable, unpassable in a separate jpanel when cpCellPass is clicked,
                 	//last is to go back to controlPanel 
-                	//passableMenu();
+                	passableMenu();
                 
-                	moves.push(processCells);
-                	updateLayout(processCells);
-                	refreshUI(mapPanel);
+                	//moves.push(processCells);
+                	//updateLayout(processCells);
+                	//refreshUI(mapPanel);
                 	
-                	System.out.println("Cells unpassable");
+                	//System.out.println("Cells unpassable");
                 }
             });
             // Store Add -- Not Done
@@ -372,10 +379,12 @@ public class MainWindow extends JFrame implements MouseListener, MouseMotionList
             ciExit.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    remove(mapPanel);
+
                     remove(rowColPanel);
                     remove(controlPanel);
                     remove(controlInit);
+                    remove(passablePanel);
+                    remove(mapPanel);
                     showGreetingMenu();
                     validate();
                     repaint();
@@ -444,7 +453,58 @@ public class MainWindow extends JFrame implements MouseListener, MouseMotionList
 	//skeleton below. ako na bahala sa logic basta need buttons with listener skeletons ty mwa 
 	
 	public void passableMenu () {
-		
+
+        remove(controlPanel);
+        remove(rowColPanel);
+        remove(controlInit);
+
+		passablePanel = new JPanel(new FlowLayout());
+        passablePanel.setSize(300,1000);
+        passablePanel.setLocation(800, 200);
+        ppPassable = new JButton("Set Passable");
+        ppNotPassable = new JButton("Set Unpassable");
+        ppClose = new JButton("Close Passable Menu");
+        passablePanel.setLayout(new BoxLayout(passablePanel, BoxLayout.Y_AXIS));
+
+
+        passablePanel.add(ppPassable);
+        passablePanel.add(ppNotPassable);
+        passablePanel.add(ppClose);
+
+        refreshUI(passablePanel);
+
+
+        //JButton Listeners
+        {
+            //Set Block as Passable
+            ppPassable.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+                }
+            });
+
+            //Set Block as Not Passable
+            ppNotPassable.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+                }
+            });
+
+            //Close passable menu button
+            ppClose.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    remove(passablePanel);
+
+                    refreshUI(rowColPanel);
+                    refreshUI(controlInit);
+                    refreshUI(controlPanel);
+                }
+            });
+        }
+
 	}
 	
 	public void removeStoreMenu () {
