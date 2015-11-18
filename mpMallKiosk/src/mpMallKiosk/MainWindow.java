@@ -1,20 +1,34 @@
 package mpMallKiosk;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.util.LinkedList;
+import java.util.Stack;
 
-import static java.awt.BorderLayout.CENTER;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 /**
  * Created by Richard Parayno on 28/10/2015.
  */
 
-public class MainWindow extends JFrame {
+public class MainWindow extends JFrame implements MouseListener, MouseMotionListener {
 
     private JLabel backgroundImage;
-
     //greetingPanel Components
     private JPanel greetingPanel;
     private JButton enterAdmin;
@@ -42,15 +56,26 @@ public class MainWindow extends JFrame {
     private JTextField xCol;
     private JLabel lRow;
     private JLabel lCol;
+    
+    //mouseListener components
+    private int mouseX;
+    private int mouseY;
 
     //AccessMenu Components
     private JPanel accessPanel;
     private JTextField password;
     private JButton enter;
+    
+    //Logic Components
+    private Layout layout;
+    private Cell[][] processCells, selectedCells;
+    private LinkedList<Integer> cellsToProcessX = new LinkedList<Integer>(), 
+    			cellsToProcessY = new LinkedList<Integer>();
+    private Stack<Cell[][]> moves = new Stack<Cell[][]>();
+    //private Stack<JPanel> guiMoves = new Stack<Jpanel>();
+    private int row, col;
 
-
-    private boolean isDeployed;
-
+    private boolean isDeployed = false; //initialized to false. redundant lines. change to true when deploy button is pressed
 
     public MainWindow () {
         super("Mall Kiosk");
@@ -67,8 +92,8 @@ public class MainWindow extends JFrame {
         //Make frame visible and non-resizable
         setVisible(true);
         setResizable(false);
-
-
+        
+        //showIntro();
     }
 
     public void showGreetingMenu() {
@@ -77,13 +102,17 @@ public class MainWindow extends JFrame {
         enterShopper = new JButton("Shopper Menu");
 
         //Add ActionListeners
-        enterAdmin.addActionListener(new ActionListener() {
+        enterAdmin.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Hides the greetingPanel and calls the showAdminMenu() method
-                greetingPanel.setVisible(false);
-                requestAccessMenu();
-            }
+                String pass = JOptionPane.showInputDialog("Password: ");
+                System.out.println(pass);
+                if(pass.equals(" ")){
+                	greetingPanel.setVisible(false);
+                	remove(greetingPanel);
+                	showAdminMenu();
+                }
+                }
         });
 
         enterShopper.addActionListener(new ActionListener() {
@@ -167,7 +196,7 @@ public class MainWindow extends JFrame {
         //Creates the panel for the controlInit
         controlInit = new JPanel(new FlowLayout());
         //Instantiates the buttons
-        ciEdit = new JButton("Edit");
+        ciEdit = new JButton("Edit Mall Layout");
         ciDeploy = new JButton("Deploy");
         ciExit = new JButton("Exit");
         //Adds the buttons
@@ -192,70 +221,121 @@ public class MainWindow extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                     // We remove the "dummy" panel we created,
                     remove(mapPanel);
-                    if (Integer.parseInt(xCol.getText()) >= 3 && Integer.parseInt(yRow.getText()) >= 3)
+                    if (Integer.parseInt(xCol.getText()) >= 3 && Integer.parseInt(yRow.getText()) >= 3){
                         //Creates the panel for the Map
-                        mapPanel = new JPanel(new GridLayout(Integer.parseInt(xCol.getText()), Integer.parseInt(yRow.getText()), -1, -1));
+                    	row = Integer.parseInt(yRow.getText());
+                    	col = Integer.parseInt(xCol.getText());
+                    	processCells = new Cell[row][col];
+                        mapPanel = new JPanel(new GridLayout(col, row, -1, -1));
                         mapPanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
                         mapPanel.setSize(800, 670);
-                        System.out.println("Grid with " + Integer.parseInt(xCol.getText()) + " columns and " + Integer.parseInt(yRow.getText()) + " rows created.");
+                        System.out.println("Grid with " + col + " columns and " + row + " rows created.");
                         //Creates the boxes
-                        for (int i = 0; i < (Integer.parseInt(xCol.getText()) * Integer.parseInt(yRow.getText())); i++) {
-                            final JLabel box = new JLabel();
-                            box.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                            mapPanel.add(box);
-                        }
-                    refreshUI(mapPanel);
-                    isDeployed = false;
+                        int currentRow = 0, currentCol = 0;
+                        for (int i = 0; i < col*row; i++) {
+                        	if(currentCol == col) {
+                        		currentRow++;
+                        		currentCol = 0;
+                        	}
+                        	JLabel box = new JLabel(currentRow + ", " + currentCol);
+                        	//processCells[currentRow][currentCol].setRowNum(currentRow);
+                        	//processCells[currentRow][currentCol].setColNum(currentCol);
+	                        box.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+	                        mapPanel.add(box);
+	                        currentCol++;
+                        }                       
+                       processCells = new Cell[col][row];
+                       refreshUI(mapPanel);
+                       moves.push(processCells);
+                       updateLayout(processCells);
+                    }
+                    else System.out.println("Error");
                 }
             });
             // Cell Pass/Unpass -- Not Done
             cpCellPass.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    isDeployed = false;
+                	
+                	//three buttons, passable, unpassable in a separate jpanel when cpCellPass is clicked,
+                	//last is to go back to controlPanel 
+                	//passableMenu();
+                
+                	moves.push(processCells);
+                	updateLayout(processCells);
+                	refreshUI(mapPanel);
+                	
+                	System.out.println("Cells unpassable");
                 }
             });
             // Store Add -- Not Done
             cpStoreAdd.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-
-                    isDeployed = false;
+                	Cell[][] tempo; //temp
+					//check if highlighted cells meet store reqs + error message if needed <-- ako dito
+                	addStore(tempo = new Cell[9][9]);
+                	moves.push(processCells);
+                	updateLayout(processCells);
+                	refreshUI(mapPanel);
+                	System.out.println("Added x store");
                 }
             });
             // Store Remove -- Not Done
             cpStoreRemove.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    isDeployed = false;
+                	
+                	//dropdown list, ako na bahala sa elements
+                	//remove button, back to controlPanel button
+                	//removeStoreMenu();
+                
+                	//remove array of cells of a store
+                	moves.push(processCells);
+                	updateLayout(processCells);
+                    refreshUI(mapPanel);
+                    System.out.println("Removed x store");
                 }
             });
             // Clear Button -- Not Done
             cpClear.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-
+                	//int indexX, indexY;
+                	//for(int i = 0; i < col; i++) {
+                		             		
+                	//}
+                	//restoreCellsToDefault(processCells, x, y);
+                	//pass highlighted cells
+                	moves.push(processCells);
+                	updateLayout(processCells);
+                	refreshUI(mapPanel);
+                	System.out.println("Clearing grid...");
                 }
             });
             // Undo Button -- Not Done
             cpUndo.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    isDeployed = false;
+                    //undo last move
+                	updateLayout(processCells);
+                	refreshUI(mapPanel);
+                	System.out.println("Undo");
                 }
             });
             // Load Button -- Not Done
             cpLoad.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    isDeployed = false;
+                     loadLayout();
+                     System.out.println("Loading layout from file");
                 }
             });
             // Save Button -- Not Done
             cpSave.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    isDeployed = false;
+                     System.out.println("Saving layout to file");
                 }
             });
 
@@ -263,7 +343,7 @@ public class MainWindow extends JFrame {
             cpConfirm.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    isDeployed = false;
+                     
                 }
             });
 
@@ -273,7 +353,7 @@ public class MainWindow extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                     refreshUI(rowColPanel);
                     refreshUI(controlPanel);
-                    isDeployed = false;
+                     
                 }
             });
 
@@ -282,6 +362,9 @@ public class MainWindow extends JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     isDeployed = true;
+                    //if not layout is deployed, error message
+                    //displayErrorMessage("No Layout is deployed at the moment");
+                    System.out.println("Deploying...");
                 }
             });
 
@@ -296,33 +379,10 @@ public class MainWindow extends JFrame {
                     showGreetingMenu();
                     validate();
                     repaint();
-                    isDeployed = false;
+                     
                 }
             });
         }
-    }
-
-    public void requestAccessMenu() {
-        //accessPanel Initialization and adding components
-        accessPanel = new JPanel(new FlowLayout());
-        password = new JTextField("DLSU2015");
-        enter = new JButton("Enter");
-        accessPanel.add(password);
-        accessPanel.add(enter);
-        accessPanel.setSize(300, 300);
-        accessPanel.setLocation(348, 348);
-        accessPanel.setVisible(true);
-        add(accessPanel);
-
-        enter.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(password.getText().equals("DLSU2015")) {
-                    accessPanel.setVisible(false);
-                    showAdminMenu();
-                }
-            }
-        });
     }
 
     // This method adds the panel and refreshes the UI.
@@ -332,7 +392,113 @@ public class MainWindow extends JFrame {
         repaint();
     }
 
+	public void restoreCellsToDefault(Cell[][] cells, LinkedList<Integer> x, LinkedList<Integer> y) {
+		int size = x.size();
+		for(int i = 0; i < size; i++ ) {
+			cells[y.poll()][x.poll()].setPassable(true);
+		}
+	}
+	
+	public void addStore (Cell[][] store) { //pota richard pakiayos di ko maayos eh
+		JPanel storeOp = new JPanel(new FlowLayout());
+		JTextField fname = new JTextField("                ");
+		JLabel lname = new JLabel("Name of store: ");
+		//dropdown list of type of store
+		JLabel ltype = new JLabel("Type of store: ");
+		JButton b1 = new JButton ("Enter");
+		b1.addActionListener(new ActionListener() {
 
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				//field checkers and error messages
+				//if all correct, initialize store object and add store to array of stores
+				//show confirmation message
+				//return to main panel 
+				refreshUI(mapPanel);
+			}
+		});
+		storeOp.add(lname);
+		storeOp.add(fname);
+		storeOp.add(ltype);
+		storeOp.add(b1);
+		storeOp.setSize(300,1000);
+        storeOp.setLocation(780, 200);
+        storeOp.setLayout(new BoxLayout(storeOp, BoxLayout.Y_AXIS));
+		controlPanel.setVisible(false);
+		add(storeOp);
+		storeOp.setVisible(true);
+		refreshUI(storeOp);
+	}
+	
+	public void drawBlock (Graphics g, JPanel panel, int row, int col) {
+		
+		
+		refreshUI(panel);
+	}
 
+	public void loadLayout () {
+		//load layout from file
+		refreshUI(mapPanel);
+	}
+	
+	//skeleton below. ako na bahala sa logic basta need buttons with listener skeletons ty mwa 
+	
+	public void passableMenu () {
+		
+	}
+	
+	public void removeStoreMenu () {
+		
+	}
+	
+	//events
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		//check if mouse in grid
+		
+	}
+	
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		// TODO Auto-generated method stub
+	}
+		
 
+	@Override
+	public void mouseClicked(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		//if inside grid 
+		//for loop to update every cell clicked
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void updateLayout (Cell[][] cells) {
+		 //layout to file	
+	}
+	
+
+	
+	
 }
