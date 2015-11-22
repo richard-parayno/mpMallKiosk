@@ -1,10 +1,26 @@
 package mpMallKiosk;
 
 public class Cell {
+	
+	/* 1 highlighted
+	 * 2 store
+	 * 3 door 
+	 * 0 passable
+	 * 5 unpassable
+	 */
+	
+	
+	protected boolean isPassable;
+	protected int representation, hold;
+		
+	public int getHold() {
+		return hold;
+	}
 
-	protected boolean isPassable,
-		isBorder,
-		isKiosk = false;
+	public void setHold(int hold) {
+		this.hold = hold;
+	}
+
 	protected int rowNum, colNum;
 	
 	public int getRowNum() {
@@ -22,31 +38,33 @@ public class Cell {
 	public void setColNum(int colNum) {
 		this.colNum = colNum;
 	}
-
-	public boolean isKiosk() {
-		return isKiosk;
-	}
-
-	public void setKiosk(boolean isKiosk) {
-		this.isKiosk = isKiosk;
-	}
-
-	public Cell (int x, int y) {
-		isPassable = true;
-	}
 	
+	public Cell (int x, int y) {
+		setRepresentation(4);
+		setRowNum(x);
+		setColNum(y);
+	}
+
+	public Cell (int x, int y, int represent) {
+		setRowNum(x);
+		setColNum(y);
+		representation = represent;
+		
+	}
+
 	public boolean isPassable() {
 		return isPassable;
-	}
-	public boolean isBorder() {
-		return isBorder;
-	}
-
-	public void setBorder(boolean isBorder) {
-		this.isBorder = isBorder;
 	}
 
 	public void setPassable(boolean isPassable) {
 		this.isPassable = isPassable;
+	}
+	
+	public int getRepresentation () {
+		return representation;
+	}
+	
+	public void setRepresentation (int represent) {
+		representation = represent;
 	}
 }
